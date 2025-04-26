@@ -33,12 +33,12 @@
 }
 
 /* Scheduler Components */
-.react-big-schedule .scheduler {
+.react-big-schedule {
   margin: 20px auto;
   border-spacing: 0;
 }
 
-.react-big-schedule .scheduler td {
+.react-big-schedule td {
   padding: 0;
 }
 
