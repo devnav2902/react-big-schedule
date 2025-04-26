@@ -1,5 +1,11 @@
 # Change Logs:
 
+## [4.5.1](https://github.com/ansulagrawal/react-big-schedule/compare/4.5.0...4.5.1)
+**Released on**: 2025-04-27
+
+- Rebuilt and redeployed version without code changes. [#207](https://github.com/ansulagrawal/react-big-schedule/pull/207) by [@ansulagrawal](https://github.com/ansulagrawal)
+
+---
 ## [4.5.0](https://github.com/ansulagrawal/react-big-schedule/compare/4.4.5...4.5.0)
 **Released on**: 2025-04-27
 
