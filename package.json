@@ -60,7 +60,7 @@
     "lint:fix": "eslint ./src/**/*.{js,jsx} --fix"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.5.1",
+    "@ant-design/icons": "^6.0.0",
     "antd": "^5.22.1",
     "dayjs": "^1.11.13",
     "prop-types": "^15.8.1",
