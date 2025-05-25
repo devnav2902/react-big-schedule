@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import PropTypes from 'prop-types';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { CellUnit, DATETIME_FORMAT, DATE_FORMAT, SummaryPos, ViewType } from '../config/default';
@@ -74,7 +75,7 @@ function Scheduler(props) {
     if ((schedulerData.isSchedulerResponsive() && !schedulerData.config.responsiveByParent) || parentRef === undefined) {
       schedulerData._setDocumentWidth(document.documentElement.clientWidth);
       window.addEventListener('resize', onWindowResize);
-      
+
       return () => {
         window.removeEventListener('resize', onWindowResize);
       };
@@ -86,7 +87,7 @@ function Scheduler(props) {
     if (parentRef !== undefined) {
       if (schedulerData.config.responsiveByParent && !!parentRef.current) {
         schedulerData._setDocumentWidth(parentRef.current.offsetWidth);
-        
+
         ulObserverRef.current = new ResizeObserver(() => {
           if (parentRef.current) {
             const width = parentRef.current.offsetWidth;
@@ -101,7 +102,7 @@ function Scheduler(props) {
         });
 
         ulObserverRef.current.observe(parentRef.current);
-        
+
         return () => {
           if (ulObserverRef.current && parentRef.current) {
             ulObserverRef.current.unobserve(parentRef.current);
@@ -117,12 +118,12 @@ function Scheduler(props) {
     let contentScrollbarWidth = 17;
     let resourceScrollbarHeight = 17;
     let resourceScrollbarWidth = 17;
-    
+
     if (schedulerContentRef.current) {
       contentScrollbarHeight = schedulerContentRef.current.offsetHeight - schedulerContentRef.current.clientHeight;
       contentScrollbarWidth = schedulerContentRef.current.offsetWidth - schedulerContentRef.current.clientWidth;
     }
-    
+
     if (schedulerResourceRef.current) {
       resourceScrollbarHeight = schedulerResourceRef.current.offsetHeight - schedulerResourceRef.current.clientHeight;
       resourceScrollbarWidth = schedulerResourceRef.current.offsetWidth - schedulerResourceRef.current.clientWidth;
@@ -130,7 +131,7 @@ function Scheduler(props) {
 
     let needSet = false;
     let tmpState = {};
-    
+
     if (contentScrollbarHeight !== state.contentScrollbarHeight) {
       tmpState = { ...tmpState, contentScrollbarHeight };
       needSet = true;
@@ -147,7 +148,7 @@ function Scheduler(props) {
       tmpState = { ...tmpState, resourceScrollbarWidth };
       needSet = true;
     }
-    
+
     if (needSet) {
       setState(prevState => ({
         ...prevState,
@@ -234,7 +235,7 @@ function Scheduler(props) {
     }
 
     const { onScrollLeft, onScrollRight, onScrollTop, onScrollBottom } = props;
-    
+
     if (schedulerContentRef.current.scrollLeft !== scrollLeftRef.current) {
       if (schedulerContentRef.current.scrollLeft === 0 && onScrollLeft !== undefined) {
         onScrollLeft(schedulerData, schedulerContentRef.current, schedulerContentRef.current.scrollWidth - schedulerContentRef.current.clientWidth);
@@ -250,7 +251,7 @@ function Scheduler(props) {
         onScrollBottom(schedulerData, schedulerContentRef.current, schedulerContentRef.current.scrollHeight - schedulerContentRef.current.clientHeight);
       }
     }
-    
+
     scrollLeftRef.current = schedulerContentRef.current.scrollLeft;
     scrollTopRef.current = schedulerContentRef.current.scrollTop;
   }, [props, schedulerData]);
@@ -298,7 +299,7 @@ function Scheduler(props) {
     const contentHeight = config.schedulerContentHeight;
     const resourcePaddingBottom = resourceScrollbarHeight === 0 ? contentScrollbarHeight : 0;
     const contentPaddingBottom = contentScrollbarHeight === 0 ? resourceScrollbarHeight : 0;
-    
+
     let schedulerContentStyle = {
       overflowX: viewType === ViewType.Week ? 'hidden' : 'auto',
       overflowY: 'auto',
@@ -307,7 +308,7 @@ function Scheduler(props) {
       height: contentHeight,
       paddingBottom: contentPaddingBottom,
     };
-    
+
     let resourceContentStyle = {
       height: contentHeight,
       overflowX: 'auto',
@@ -315,7 +316,7 @@ function Scheduler(props) {
       width: resourceTableWidth + resourceScrollbarWidth - 2,
       margin: `0px -${contentScrollbarWidth}px 0px 0px`,
     };
-    
+
     if (config.schedulerMaxHeight > 0) {
       schedulerContentStyle = {
         ...schedulerContentStyle,
@@ -328,7 +329,7 @@ function Scheduler(props) {
     }
 
     const resourceName = schedulerData.isEventPerspective ? config.taskName : config.resourceName;
-    
+
     tbodyContent = (
       <tr>
         <td style={{ display: config.resourceViewEnabled ? undefined : 'none', width: resourceTableWidth, verticalAlign: 'top' }}>
@@ -466,7 +467,7 @@ Scheduler.propTypes = {
   onScrollBottom: PropTypes.func,
 };
 
-export { 
+export {
   AddMorePopover,
   CellUnit,
   DATETIME_FORMAT,
