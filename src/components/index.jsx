@@ -60,6 +60,7 @@ class Scheduler extends Component {
 
     if ((schedulerData.isSchedulerResponsive() && !schedulerData.config.responsiveByParent) || parentRef === undefined) {
       schedulerData._setDocumentWidth(document.documentElement.clientWidth);
+      schedulerData._setDocumentHeight(document.documentElement.clientHeight);
       window.onresize = this.onWindowResize;
     }
   }
@@ -67,6 +68,7 @@ class Scheduler extends Component {
   onWindowResize = e => {
     const { schedulerData } = this.props;
     schedulerData._setDocumentWidth(document.documentElement.clientWidth);
+    schedulerData._setDocumentHeight(document.documentElement.clientHeight);
     this.setState({ documentWidth: document.documentElement.clientWidth, documentHeight: document.documentElement.clientHeight });
   };
 
@@ -112,18 +114,19 @@ class Scheduler extends Component {
     if (parentRef !== undefined) {
       if (schedulerData.config.responsiveByParent && !!parentRef.current) {
         schedulerData._setDocumentWidth(parentRef.current.offsetWidth);
+        schedulerData._setDocumentHeight(parentRef.current.offsetHeight);
         this.ulObserver = new ResizeObserver((entries, observer) => {
           if (parentRef.current) {
             const width = parentRef.current.offsetWidth;
             const height = parentRef.current.offsetHeight;
             schedulerData._setDocumentWidth(width);
+            schedulerData._setDocumentHeight(height);
             this.setState({
               documentWidth: width,
               documentHeight: height,
             });
           }
         });
-
         this.ulObserver.observe(parentRef.current);
       }
     }
@@ -175,7 +178,10 @@ class Scheduler extends Component {
       const { contentScrollbarWidth } = this.state;
       const { resourceScrollbarHeight } = this.state;
       const { resourceScrollbarWidth } = this.state;
-      const contentHeight = config.schedulerContentHeight;
+      let contentHeight = config.schedulerContentHeight;
+      if (schedulerData.config.responsiveByParent && schedulerData.documentHeight > 0) {
+        contentHeight = schedulerData.documentHeight;
+      }
       const resourcePaddingBottom = resourceScrollbarHeight === 0 ? contentScrollbarHeight : 0;
       const contentPaddingBottom = contentScrollbarHeight === 0 ? resourceScrollbarHeight : 0;
       let schedulerContentStyle = {

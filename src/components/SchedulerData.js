@@ -20,6 +20,7 @@ export default class SchedulerData {
     this.resizing = false;
     this.scrollToSpecialDayjs = false;
     this.documentWidth = 0;
+    this.documentHeight = 0;
     this._shouldReloadViewType = false;
 
     this.calendarPopoverLocale = undefined;
@@ -281,6 +282,11 @@ export default class SchedulerData {
     return this.isSchedulerResponsive() ? parseInt((baseWidth * Number(this.config.schedulerWidth.slice(0, -1))) / 100, 10) : this.config.schedulerWidth;
   }
 
+  getSchedulerHeight() {
+    const baseHeight = this.documentHeight - this.config.bottomHeight > 0 ? this.documentHeight - this.config.bottomHeight : 0;
+    return this.isSchedulerResponsive() ? parseInt((baseHeight * Number(this.config.schedulerHeight.slice(0, -1))) / 100, 10) : this.config.setSchedulerMaxHeight;
+  }
+
   getResourceTableWidth() {
     const resourceTableConfigWidth = this.getResourceTableConfigWidth();
     const schedulerWidth = this.getSchedulerWidth();
@@ -518,6 +524,12 @@ export default class SchedulerData {
   _setDocumentWidth(documentWidth) {
     if (documentWidth >= 0) {
       this.documentWidth = documentWidth;
+    }
+  }
+
+  _setDocumentHeight(documentHeight) {
+    if (documentHeight >= 0) {
+      this.documentHeight = documentHeight;
     }
   }
 

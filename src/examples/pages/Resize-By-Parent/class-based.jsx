@@ -7,6 +7,7 @@ const getInitialSchedulerData = () => {
   const schedulerData = new SchedulerData('2022-12-18', ViewType.Week, false, false, {
     responsiveByParent: true,
     schedulerWidth: '100%',
+    schedulerHeight: '100%',
     besidesWidth: 0,
     schedulerContentHeight: '100%',
   });
