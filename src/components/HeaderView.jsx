@@ -95,8 +95,8 @@ HeaderView.propTypes = {
   nonAgendaCellHeaderTemplateResolver: PropTypes.func,
 };
 
-HeaderView.defaultProps = {
-  nonAgendaCellHeaderTemplateResolver: null,
-};
+// HeaderView.defaultProps = {
+//   nonAgendaCellHeaderTemplateResolver: null,
+// };
 
 export default HeaderView;

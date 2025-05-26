@@ -109,9 +109,9 @@ SchedulerHeader.propTypes = {
   rightCustomHeader: PropTypes.object,
 };
 
-SchedulerHeader.defaultProps = {
-  leftCustomHeader: null,
-  rightCustomHeader: null,
-};
+// SchedulerHeader.defaultProps = {
+//   leftCustomHeader: null,
+//   rightCustomHeader: null,
+// };
 
 export default SchedulerHeader;
