@@ -54,6 +54,7 @@ class Scheduler extends Component {
       resourceScrollbarWidth: 17,
       documentWidth: 0,
       documentHeight: 0,
+      headerHeight: 0,
     };
     this.scrollLeft = 0;
     this.scrollTop = 0;
@@ -130,6 +131,26 @@ class Scheduler extends Component {
         this.ulObserver.observe(parentRef.current);
       }
     }
+
+    if (this.schedulerHeader) {
+      this.headerObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          // Get the DOM node
+          const node = entry.target;
+          // Get the height from the bounding rect (includes padding and border)
+          const rect = node.getBoundingClientRect();
+          // Get computed styles for margins
+          const style = window.getComputedStyle(node);
+          const marginTop = parseFloat(style.marginTop) || 0;
+          const marginBottom = parseFloat(style.marginBottom) || 0;
+          // Total height including margins
+          const totalHeight = rect.height + marginTop + marginBottom;
+          schedulerData._setSchedulerHeaderHeight(totalHeight);
+          this.setState({ headerHeight: totalHeight });
+        }
+      });
+      this.headerObserver.observe(this.schedulerHeader);
+    }
   }
 
   componentDidUpdate(props, state) {
@@ -160,6 +181,7 @@ class Scheduler extends Component {
     const { schedulerData, leftCustomHeader, rightCustomHeader } = this.props;
     const { viewType, renderData, showAgenda, config } = schedulerData;
     const width = schedulerData.getSchedulerWidth();
+    const height = schedulerData.getSchedulerHeight();
 
     let tbodyContent = <tr />;
     if (showAgenda) {
@@ -179,6 +201,7 @@ class Scheduler extends Component {
       const { resourceScrollbarHeight } = this.state;
       const { resourceScrollbarWidth } = this.state;
       let contentHeight = config.schedulerContentHeight;
+      const headerHeight = config.headerEnabled ? this.state.headerHeight || 0 : 0;
       if (schedulerData.config.responsiveByParent && schedulerData.documentHeight > 0) {
         contentHeight = schedulerData.documentHeight;
       }
@@ -207,6 +230,18 @@ class Scheduler extends Component {
         resourceContentStyle = {
           ...resourceContentStyle,
           maxHeight: config.schedulerMaxHeight - config.tableHeaderHeight,
+        };
+      } else if (schedulerData.config.responsiveByParent && schedulerData.documentHeight > 0) {
+        // Responsive height minus SchedulerHeader
+        const availableHeight = schedulerData.getSchedulerHeight();
+
+        schedulerContentStyle = {
+          ...schedulerContentStyle,
+          height: availableHeight,
+        };
+        resourceContentStyle = {
+          ...resourceContentStyle,
+          height: availableHeight,
         };
       }
 
@@ -248,7 +283,7 @@ class Scheduler extends Component {
                   onMouseOver={this.onSchedulerHeadMouseOver}
                   onFocus={this.onSchedulerHeadMouseOver}
                   onMouseOut={this.onSchedulerHeadMouseOut}
-                  onBlur={this.onSchedulerHeadMouseOut} 
+                  onBlur={this.onSchedulerHeadMouseOut}
                   onScroll={this.onSchedulerHeadScroll}
                 >
                   <div style={{ paddingRight: `${contentScrollbarWidth}px`, width: schedulerWidth + contentScrollbarWidth }}>
@@ -286,10 +321,13 @@ class Scheduler extends Component {
       );
     }
 
-    let schedulerHeader = <div />;
-    if (config.headerEnabled) {
-      schedulerHeader = (
+    let schedulerHeader = (
         <SchedulerHeader
+          ref={this.schedulerHeaderRef}
+          style={{ 
+            display: config.headerEnabled ? undefined : 'none',
+            marginBottom: config.headerEnabled ? '24px' : undefined,
+          }}
           onViewChange={this.onViewChange}
           schedulerData={schedulerData}
           onSelectDate={this.onSelect}
@@ -298,8 +336,7 @@ class Scheduler extends Component {
           rightCustomHeader={rightCustomHeader}
           leftCustomHeader={leftCustomHeader}
         />
-      );
-    }
+    );
 
     return (
       <table id="RBS-Scheduler-root" className="react-big-schedule" style={{ width: `${width}px` }}>
@@ -369,6 +406,10 @@ class Scheduler extends Component {
   schedulerResourceRef = element => {
     this.schedulerResource = element;
   };
+
+  schedulerHeaderRef = element => {
+    this.schedulerHeader = element;
+  }
 
   onSchedulerResourceMouseOver = () => {
     this.currentArea = 1;

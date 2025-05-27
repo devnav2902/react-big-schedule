@@ -8,7 +8,16 @@ import { DATE_FORMAT } from '../config/default';
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
-function SchedulerHeader({ onViewChange, goNext, goBack, onSelectDate, schedulerData, leftCustomHeader, rightCustomHeader }) {
+const SchedulerHeader = React.forwardRef(({
+  onViewChange,
+  goNext,
+  goBack,
+  onSelectDate,
+  schedulerData,
+  leftCustomHeader,
+  rightCustomHeader,
+  style,
+}, ref) => {
   const [viewSpinning, setViewSpinning] = useState(false);
   const [dateSpinning, setDateSpinning] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -34,7 +43,7 @@ function SchedulerHeader({ onViewChange, goNext, goBack, onSelectDate, scheduler
     };
 
     if (config.viewChangeSpinEnabled || config.dateChangeSpinEnabled) {
-      setTimeout(coreFunc, config.schedulerHeaderEventsFuncsTimeoutMs); // 100ms
+      setTimeout(coreFunc, config.schedulerHeaderEventsFuncsTimeoutMs);
     } else {
       coreFunc();
     }
@@ -64,15 +73,29 @@ function SchedulerHeader({ onViewChange, goNext, goBack, onSelectDate, scheduler
   ));
 
   return (
-    <Row gutter={[10, 10]} type="flex" align="middle" justify="space-between" style={{ marginBottom: '24px' }}>
+    <Row
+      ref={ref}
+      gutter={[10, 10]}
+      type="flex"
+      align="middle"
+      justify="space-between"
+      style={{ ...style }}
+    >
       {leftCustomHeader}
       <Col>
         <div className="header2-text">
           <Space>
             <div>
-              <LeftOutlined type="left" style={{ marginRight: '8px' }} className="icon-nav" onClick={() => handleEvents(goBack, false)} />
+              <LeftOutlined style={{ marginRight: '8px' }} className="icon-nav" onClick={() => handleEvents(goBack, false)} />
               {config.calendarPopoverEnabled ? (
-                <Popover content={popover} placement="bottomLeft" trigger="click" open={visible} onOpenChange={setVisible} overlayClassName="scheduler-header-popover">
+                <Popover
+                  content={popover}
+                  placement="bottomLeft"
+                  trigger="click"
+                  open={visible}
+                  onOpenChange={setVisible}
+                  overlayClassName="scheduler-header-popover"
+                >
                   <span className="header2-text-label" style={{ cursor: 'pointer' }}>
                     {dateLabel}
                   </span>
@@ -80,7 +103,7 @@ function SchedulerHeader({ onViewChange, goNext, goBack, onSelectDate, scheduler
               ) : (
                 <span className="header2-text-label">{dateLabel}</span>
               )}
-              <RightOutlined type="right" style={{ marginLeft: '8px' }} className="icon-nav" onClick={() => handleEvents(goNext, false)} />
+              <RightOutlined style={{ marginLeft: '8px' }} className="icon-nav" onClick={() => handleEvents(goNext, false)} />
             </div>
             <Spin spinning={dateSpinning} />
           </Space>
@@ -89,7 +112,12 @@ function SchedulerHeader({ onViewChange, goNext, goBack, onSelectDate, scheduler
       <Col>
         <Space>
           <Spin spinning={viewSpinning} />
-          <RadioGroup buttonStyle="solid" defaultValue={defaultValue} size="default" onChange={event => handleEvents(onViewChange, true, event)}>
+          <RadioGroup
+            buttonStyle="solid"
+            defaultValue={defaultValue}
+            size="default"
+            onChange={event => handleEvents(onViewChange, true, event)}
+          >
             {radioButtonList}
           </RadioGroup>
         </Space>
@@ -97,7 +125,7 @@ function SchedulerHeader({ onViewChange, goNext, goBack, onSelectDate, scheduler
       {rightCustomHeader}
     </Row>
   );
-}
+});
 
 SchedulerHeader.propTypes = {
   onViewChange: PropTypes.func.isRequired,
@@ -107,11 +135,7 @@ SchedulerHeader.propTypes = {
   schedulerData: PropTypes.object.isRequired,
   leftCustomHeader: PropTypes.object,
   rightCustomHeader: PropTypes.object,
+  style: PropTypes.object,
 };
-
-// SchedulerHeader.defaultProps = {
-//   leftCustomHeader: null,
-//   rightCustomHeader: null,
-// };
 
 export default SchedulerHeader;

@@ -8,8 +8,10 @@ const getInitialSchedulerData = () => {
     responsiveByParent: true,
     schedulerWidth: '100%',
     schedulerHeight: '100%',
-    besidesWidth: 0,
+    besidesWidth: 50,
+    underneathHeight: 50,
     schedulerContentHeight: '100%',
+    headerEnabled: true,
   });
   schedulerData.localeDayjs.locale('en');
   schedulerData.setResources(DemoData.resources);
@@ -89,26 +91,42 @@ class ResizeByParent extends Component {
     this.setState(state => ({ parentHeight: state.parentHeight > 200 ? state.parentHeight - 50 : state.parentHeight }));
   };
 
+  toggleHeader = () => {
+    const { viewModel } = this.state;
+    viewModel.config = { ...viewModel.config, headerEnabled: !viewModel.config.headerEnabled };
+    this.setState({ viewModel });
+  };
+
   render() {
     const { viewModel, parentWidth, parentHeight } = this.state;
     return (
       <div>
         <h2>Resize By Parent Example (Class)</h2>
         <div style={{ marginBottom: 16 }}>
-          <Button onClick={this.decreaseWidth} style={{ marginRight: 8 }}>- Decrease Width</Button>
-          <Button onClick={this.increaseWidth} style={{ marginRight: 8 }}>+ Increase Width</Button>
-          <Button onClick={this.decreaseHeight} style={{ marginRight: 8 }}>- Decrease Height</Button>
-          <Button onClick={this.increaseHeight}>+ Increase Height</Button>
-          <span style={{ marginLeft: 16 }}>
-            Current parent width:
-            {parentWidth}
-            px
-          </span>
-          <span style={{ marginLeft: 16 }}>
-            Current parent height:
-            {parentHeight}
-            px
-          </span>
+          <div style={{ marginBottom: 8 }}>
+            <Button onClick={this.decreaseWidth} style={{ marginRight: 8 }}>- Decrease Width</Button>
+            <Button onClick={this.increaseWidth} style={{ marginRight: 8 }}>+ Increase Width</Button>
+            <span style={{ marginLeft: 16 }}>
+              Current parent width:&nbsp;
+              {parentWidth}
+              px
+            </span>
+          </div>
+          <div style={{ marginBottom: 8 }}>
+            <Button onClick={this.decreaseHeight} style={{ marginRight: 8 }}>- Decrease Height</Button>
+            <Button onClick={this.increaseHeight}>+ Increase Height</Button>
+            <span style={{ marginLeft: 16 }}>
+              Current parent height:&nbsp;
+              {parentHeight}
+              px
+            </span>
+          </div>
+          <div>
+            <Button onClick={this.toggleHeader} style={{ marginRight: 8 }}>
+              {viewModel.config.headerEnabled ? 'Disable' : 'Enable'}
+              &nbsp;Header
+            </Button>
+          </div>
         </div>
         <div
           ref={this.parentRef}
