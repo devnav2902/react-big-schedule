@@ -167,6 +167,20 @@ class Scheduler extends Component {
     }
   }
 
+  componentWillUnmount() {
+    if (this.parentRefPoll) {
+      clearInterval(this.parentRefPoll);
+    }
+    if (this.ulObserver) {
+      this.ulObserver.disconnect();
+      this.ulObserver = null;
+    }
+    if (this.headerObserver) {
+      this.headerObserver.disconnect();
+      this.headerObserver = null;
+    }
+  }
+
   render() {
     const { schedulerData, leftCustomHeader, rightCustomHeader } = this.props;
     const { viewType, renderData, showAgenda, config } = schedulerData;
