@@ -570,6 +570,15 @@ The max height of Scheduler. If the desired height is bigger than the max height
 frozen and vertical scroll bar will appear, but this won't happen when the max height is set to `0`. Refer
 to [this example](https://stephenchou1017.github.io/scheduler/#/freezefirstrow).
 
+**If you are using `responsiveByParent`, you can omit this setting or set it to `0` to ensure the Scheduler height conforms to the parent container.**
+When conforming to the parent container, the Scheduler will fill the available space and scroll bars will appear as needed.
+
+#### underneathHeight
+
+When using `responsiveByParent`, this property allows you to reserve space beneath the Scheduler (for example, for a footer or other fixed elements). The Scheduler's height will be reduced by this amount, ensuring it does not overlap with content below. Set this to the pixel height you want to reserve at the bottom of the parent container.
+
+**Example:** If your parent container is 600px tall and `underneathHeight` is 50, the Scheduler will use up to 550px of height.
+
 #### tableHeaderHeight
 
 Height of Scheduler table header.
