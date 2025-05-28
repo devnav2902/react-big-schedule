@@ -101,8 +101,7 @@ class ResizeByParent extends Component {
     const { viewModel, parentWidth, parentHeight } = this.state;
     return (
       <div>
-        <h2>Resize By Parent Example (Class)</h2>
-        <div style={{ marginBottom: 16 }}>
+        <div style={{ marginBottom: 16, marginTop: 16 }}>
           <div style={{ marginBottom: 8 }}>
             <Button onClick={this.decreaseWidth} style={{ marginRight: 8 }}>- Decrease Width</Button>
             <Button onClick={this.increaseWidth} style={{ marginRight: 8 }}>+ Increase Width</Button>
