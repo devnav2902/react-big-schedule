@@ -112,24 +112,14 @@ class Scheduler extends Component {
 
     this.resolveScrollbarSize();
 
-    if (parentRef !== undefined) {
-      if (schedulerData.config.responsiveByParent && !!parentRef.current) {
-        schedulerData._setDocumentWidth(parentRef.current.offsetWidth);
-        schedulerData._setDocumentHeight(parentRef.current.offsetHeight);
-        this.ulObserver = new ResizeObserver((entries, observer) => {
-          if (parentRef.current) {
-            const width = parentRef.current.offsetWidth;
-            const height = parentRef.current.offsetHeight;
-            schedulerData._setDocumentWidth(width);
-            schedulerData._setDocumentHeight(height);
-            this.setState({
-              documentWidth: width,
-              documentHeight: height,
-            });
-          }
-        });
-        this.ulObserver.observe(parentRef.current);
-      }
+    this.attachParentObserver();
+    if (this.props.parentRef && !this.props.parentRef.current) {
+      this.parentRefPoll = setInterval(() => {
+        if (this.props.parentRef.current) {
+          this.attachParentObserver();
+          clearInterval(this.parentRefPoll);
+        }
+      }, 30); // check every 30ms
     }
 
     if (this.schedulerHeader) {
@@ -153,9 +143,9 @@ class Scheduler extends Component {
     }
   }
 
-  componentDidUpdate(props, state) {
+  componentDidUpdate(prevProps, state) {
     this.resolveScrollbarSize();
-
+   
     const { schedulerData } = this.props;
     const { localeDayjs, behaviors } = schedulerData;
     if (schedulerData.getScrollToSpecialDayjs() && !!behaviors.getScrollSpecialDayjsFunc) {
@@ -383,6 +373,32 @@ class Scheduler extends Component {
       needSet = true;
     }
     if (needSet) this.setState(tmpState);
+  };
+
+  attachParentObserver = () => {
+    const { schedulerData, parentRef } = this.props;
+    if (
+      parentRef &&
+      parentRef.current &&
+      schedulerData.config.responsiveByParent &&
+      !this.ulObserver
+    ) {
+      schedulerData._setDocumentWidth(parentRef.current.offsetWidth);
+      schedulerData._setDocumentHeight(parentRef.current.offsetHeight);
+      this.ulObserver = new ResizeObserver(() => {
+        if (parentRef.current) {
+          const width = parentRef.current.offsetWidth;
+          const height = parentRef.current.offsetHeight;
+          schedulerData._setDocumentWidth(width);
+          schedulerData._setDocumentHeight(height);
+          this.setState({
+            documentWidth: width,
+            documentHeight: height,
+          });
+        }
+      });
+      this.ulObserver.observe(parentRef.current);
+    }
   };
 
   schedulerHeadRef = element => {

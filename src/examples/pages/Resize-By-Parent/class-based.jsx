@@ -31,7 +31,7 @@ class ResizeByParent extends Component {
   }
 
   componentDidMount() {
-    this.forceUpdate();
+    // this.forceUpdate();
   }
 
   toggleExpandFunc = (schedulerData, slotId) => {
@@ -143,7 +143,6 @@ class ResizeByParent extends Component {
             padding: 8,
           }}
         >
-          {this.parentRef.current && (
           <Scheduler
             parentRef={this.parentRef}
             schedulerData={viewModel}
@@ -158,7 +157,6 @@ class ResizeByParent extends Component {
             viewEvent2Click={this.ops2}
             toggleExpandFunc={this.toggleExpandFunc}
           />
-          )}
         </div>
       </div>
     );
