@@ -20,6 +20,8 @@ export default class SchedulerData {
     this.resizing = false;
     this.scrollToSpecialDayjs = false;
     this.documentWidth = 0;
+    this.documentHeight = 0;
+    this.schedulerHeaderHeight = 0;
     this._shouldReloadViewType = false;
 
     this.calendarPopoverLocale = undefined;
@@ -81,6 +83,12 @@ export default class SchedulerData {
   setBesidesWidth(besidesWidth) {
     if (besidesWidth >= 0) {
       this.config.besidesWidth = besidesWidth;
+    }
+  }
+
+  setUnderneathHeight(underneathHeight) {
+    if (underneathHeight >= 0) {
+      this.config.underneathHeight = underneathHeight;
     }
   }
 
@@ -279,6 +287,18 @@ export default class SchedulerData {
   getSchedulerWidth() {
     const baseWidth = this.documentWidth - this.config.besidesWidth > 0 ? this.documentWidth - this.config.besidesWidth : 0;
     return this.isSchedulerResponsive() ? parseInt((baseWidth * Number(this.config.schedulerWidth.slice(0, -1))) / 100, 10) : this.config.schedulerWidth;
+  }
+
+  getSchedulerHeight() {
+    // Use the header height tracked in SchedulerData (set via _setSchedulerHeaderHeight)
+    const headerHeight = this.schedulerHeaderHeight || 0;
+    const baseHeight = this.documentHeight - headerHeight - this.config.tableHeaderHeight - (this.config.underneathHeight || 0);
+    const validBaseHeight = baseHeight > 0 ? baseHeight : 0;
+    if (this.isSchedulerResponsive() && this.config.schedulerHeight && this.config.schedulerHeight.endsWith && this.config.schedulerHeight.endsWith('%')) {
+      return parseInt((validBaseHeight * Number(this.config.schedulerHeight.slice(0, -1))) / 100, 10);
+    }
+    // fallback to max height if set, else just use base height
+    return this.config.setSchedulerMaxHeight || validBaseHeight;
   }
 
   getResourceTableWidth() {
@@ -518,6 +538,18 @@ export default class SchedulerData {
   _setDocumentWidth(documentWidth) {
     if (documentWidth >= 0) {
       this.documentWidth = documentWidth;
+    }
+  }
+
+  _setDocumentHeight(documentHeight) {
+    if (documentHeight >= 0) {
+      this.documentHeight = documentHeight;
+    }
+  }
+
+  _setSchedulerHeaderHeight(schedulerHeaderHeight) {
+    if (schedulerHeaderHeight >= 0) {
+      this.schedulerHeaderHeight = schedulerHeaderHeight;
     }
   }
 

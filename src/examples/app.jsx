@@ -11,6 +11,7 @@ const ReadOnly = lazy(() => import('./pages/Read-Only'));
 const AddMore = lazy(() => import('./pages/Add-More'));
 const DragAndDrop = lazy(() => import('./pages/Drag-And-Drop'));
 const CustomTime = lazy(() => import('./pages/Custom-Time'));
+const ResizeByParent = lazy(() => import('./pages/Resize-By-Parent'));
 
 function App() {
   const router = createBrowserRouter([
@@ -63,6 +64,14 @@ function App() {
           element: (
             <Suspense fallback={<Fallback />}>
               <CustomTime />
+            </Suspense>
+          ),
+        },
+        {
+          path: '/resize-by-parent',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <ResizeByParent />
             </Suspense>
           ),
         },

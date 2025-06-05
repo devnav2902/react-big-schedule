@@ -48,6 +48,7 @@ function Scheduler(props) {
     resourceScrollbarWidth: 17,
     documentWidth: 0,
     documentHeight: 0,
+    headerHeight: 0,
   });
 
   // Refs instead of class properties
@@ -55,14 +56,17 @@ function Scheduler(props) {
   const scrollLeftRef = useRef(0);
   const scrollTopRef = useRef(0);
   const schedulerHeadRef = useRef(null);
+  const schedulerHeaderRef = useRef(null);
   const schedulerResourceRef = useRef(null);
   const schedulerContentRef = useRef(null);
   const schedulerContentBgTableRef = useRef(null);
   const ulObserverRef = useRef(null);
+  const headerObserverRef = useRef(null);
 
   // Window resize handler
   const onWindowResize = useCallback(() => {
     schedulerData._setDocumentWidth(document.documentElement.clientWidth);
+    schedulerData._setDocumentHeight(document.documentElement.clientHeight);
     setState(prevState => ({
       ...prevState,
       documentWidth: document.documentElement.clientWidth,
@@ -74,6 +78,7 @@ function Scheduler(props) {
   useEffect(() => {
     if ((schedulerData.isSchedulerResponsive() && !schedulerData.config.responsiveByParent) || parentRef === undefined) {
       schedulerData._setDocumentWidth(document.documentElement.clientWidth);
+      schedulerData._setDocumentHeight(document.documentElement.clientHeight);
       window.addEventListener('resize', onWindowResize);
 
       return () => {
@@ -93,6 +98,7 @@ function Scheduler(props) {
             const width = parentRef.current.offsetWidth;
             const height = parentRef.current.offsetHeight;
             schedulerData._setDocumentWidth(width);
+            schedulerData._setDocumentHeight(height);
             setState(prevState => ({
               ...prevState,
               documentWidth: width,
@@ -111,6 +117,43 @@ function Scheduler(props) {
       }
     }
   }, [parentRef, schedulerData]);
+
+  // Effect for scheduler header resize observation
+  useEffect(() => {
+    if (schedulerHeaderRef !== undefined) {
+      if (schedulerData.config.responsiveByParent && !!schedulerHeaderRef.current) {
+        schedulerData._setDocumentWidth(schedulerHeaderRef.current.offsetWidth);
+        schedulerData._setDocumentHeight(schedulerHeaderRef.current.offsetHeight);
+        headerObserverRef.current = new ResizeObserver(entries => {
+          entries.forEach(entry => {
+            // Get the DOM node
+            const node = entry.target;
+            // Get the height from the bounding rect (includes padding and border)
+            const rect = node.getBoundingClientRect();
+            // Get computed styles for margins
+            const style = window.getComputedStyle(node);
+            const marginTop = parseFloat(style.marginTop) || 0;
+            const marginBottom = parseFloat(style.marginBottom) || 0;
+            // Total height including margins
+            const totalHeight = rect.height + marginTop + marginBottom;
+            schedulerData._setSchedulerHeaderHeight(totalHeight);
+            setState(prevState => ({
+              ...prevState,
+              headerHeight: totalHeight,
+            }));
+          });
+        });
+
+        headerObserverRef.current.observe(schedulerHeaderRef.current);
+
+        return () => {
+          if (headerObserverRef.current && schedulerHeaderRef.current) {
+            headerObserverRef.current.unobserve(schedulerHeaderRef.current);
+          }
+        };
+      }
+    }
+  }, [schedulerHeaderRef, schedulerData]);
 
   // Resolving scrollbar sizes
   const resolveScrollbarSize = useCallback(() => {
@@ -326,6 +369,18 @@ function Scheduler(props) {
         ...resourceContentStyle,
         maxHeight: config.schedulerMaxHeight - config.tableHeaderHeight,
       };
+    } else if (config.responsiveByParent && schedulerData.documentHeight > 0) {
+      // Responsive height minus SchedulerHeader
+      const availableHeight = schedulerData.getSchedulerHeight();
+
+      schedulerContentStyle = {
+        ...schedulerContentStyle,
+        height: availableHeight,
+      };
+      resourceContentStyle = {
+        ...resourceContentStyle,
+        height: availableHeight,
+      };
     }
 
     const resourceName = schedulerData.isEventPerspective ? config.taskName : config.resourceName;
@@ -406,20 +461,22 @@ function Scheduler(props) {
     );
   }
 
-  let schedulerHeader = <div />;
-  if (config.headerEnabled) {
-    schedulerHeader = (
-      <SchedulerHeader
-        onViewChange={handleViewChange}
-        schedulerData={schedulerData}
-        onSelectDate={onSelect}
-        goNext={goNext}
-        goBack={goBack}
-        rightCustomHeader={rightCustomHeader}
-        leftCustomHeader={leftCustomHeader}
-      />
-    );
-  }
+  const schedulerHeader = (
+    <SchedulerHeader
+      ref={schedulerHeaderRef}
+      style={{
+        display: config.headerEnabled ? undefined : 'none',
+        marginBottom: config.headerEnabled ? '24px' : undefined,
+      }}
+      onViewChange={handleViewChange}
+      schedulerData={schedulerData}
+      onSelectDate={onSelect}
+      goNext={goNext}
+      goBack={goBack}
+      rightCustomHeader={rightCustomHeader}
+      leftCustomHeader={leftCustomHeader}
+    />
+  );
 
   return (
     <table id="RBS-Scheduler-root" className="react-big-schedule" style={{ width: `${width}px` }}>

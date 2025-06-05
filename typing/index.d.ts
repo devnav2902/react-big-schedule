@@ -261,6 +261,7 @@ export interface State<EventType extends EventItem = EventItem> {
 export interface SchedulerDataConfig {
   schedulerWidth?: `${number}%`;
   besidesWidth?: number;
+  underneathHeight?: number;
   schedulerMaxHeight?: number;
   tableHeaderHeight?: number;
   schedulerContentHeight?: string | number;
