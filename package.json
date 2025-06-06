@@ -39,7 +39,7 @@
     "README.md",
     "License"
   ],
-  "main": "dist/index.js",
+  "main": "dist/bundle.js",
   "homepage": "https://react-big-schedule.vercel.app",
   "repository": {
     "type": "git",
