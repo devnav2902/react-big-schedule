@@ -2,6 +2,14 @@
 
 ---
 
+## [5.1.0](https://github.com/ansulagrawal/react-big-schedule/compare/5.0.1...5.1.0)
+
+**Released on:** 2025-06-07 
+- **Revert** Reverted pr [#216](https://github.com/ansulagrawal/react-big-schedule/pull/216) as there was no issue in build script. Thanks to [@stan-v](https://github.com/stan-v) for rasing the issue [#218](https://github.com/ansulagrawal/react-big-schedule/issues/218).
+  [#219](https://github.com/ansulagrawal/react-big-schedule/pull/219) by [@ansulagrawal](https://github.com/ansulagrawal)
+
+---
+
 ## [5.0.1](https://github.com/ansulagrawal/react-big-schedule/compare/5.0.0...5.0.1)
 
 **Released on:** 2025-06-07
