@@ -65,10 +65,17 @@ class EventItem extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
-      const { left, top, width } = this.props;
-      this.setState({ left, top, width });
+    const { left, top, width, eventItem } = this.props;
 
+    if (
+      prevProps.left !== left
+      || prevProps.top !== top
+      || prevProps.width !== width
+    ) {
+      this.setState({ left, top, width });
+    }
+
+    if (prevProps.eventItem !== eventItem) {
       this.subscribeResizeEvent(this.props);
     }
   }

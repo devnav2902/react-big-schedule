@@ -3,7 +3,10 @@ import { Calendar, Col, Popover, Radio, Row, Space, Spin } from 'antd';
 import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import localeData from 'dayjs/plugin/localeData';
 import { DATE_FORMAT } from '../config/default';
+
+dayjs.extend(localeData);
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
